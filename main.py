@@ -61,8 +61,43 @@ if __name__ == "__main__":
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):       
         print("Бот выключен")      
+from flask import Flask # pyright: ignore[reportMissingImports]
+from threading import Thread
+import os
 
+app = Flask('')
 
+@app.route('/')
+def home():
+    return "I'm alive"
+
+def run():
+  app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+from flask import Flask # pyright: ignore[reportMissingImports]
+from threading import Thread
+import os
+
+# Создаем мини-сайт внутри бота
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+# Функция, которая запускает сервер на порту от Render
+def run():
+    # Вот тут мы используем тот самый PORT, который ты ввел в Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
+
+# Запускаем сервер в отдельном потоке, чтобы он не мешал боту
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
 
 
 
